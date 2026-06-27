@@ -41,7 +41,36 @@ builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddHttpClient("AfroMessaging");
 
-var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:5173"];
+var corsOriginsList = new List<string>();
+var configuredOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+if (configuredOrigins != null && configuredOrigins.Length > 0)
+{
+    corsOriginsList.AddRange(configuredOrigins);
+}
+else
+{
+    var singleOriginValue = builder.Configuration["Cors:AllowedOrigins"];
+    if (!string.IsNullOrEmpty(singleOriginValue))
+    {
+        var splitOrigins = singleOriginValue.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        corsOriginsList.AddRange(splitOrigins);
+    }
+}
+
+var originsString = builder.Configuration["Cors:AllowedOriginsString"];
+if (!string.IsNullOrEmpty(originsString))
+{
+    var splitOrigins = originsString.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    corsOriginsList.AddRange(splitOrigins);
+}
+
+if (corsOriginsList.Count == 0)
+{
+    corsOriginsList.Add("http://localhost:5173");
+}
+
+var corsOrigins = corsOriginsList.Distinct().ToArray();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>

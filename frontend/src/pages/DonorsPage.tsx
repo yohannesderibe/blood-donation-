@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Eye, Trash2, CheckCircle, Plus, X } from 'lucide-react';
+import { Eye, EyeOff, Trash2, CheckCircle, Plus, X } from 'lucide-react';
 import api, { BLOOD_TYPES, type DonorListItem, type DonorDetail, type PagedResult } from '../api/client';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -41,6 +41,7 @@ export default function DonorsPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const fetchDonors = useCallback(async () => {
     setLoading(true);
@@ -174,7 +175,12 @@ export default function DonorsPage() {
               </div>
               <div className="form-group">
                 <label>{t('donorPassword')} *</label>
-                <input type="password" value={form.password} onChange={(e) => updateForm('password', e.target.value)} required minLength={6} />
+                <div className="password-input-container">
+                  <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => updateForm('password', e.target.value)} required minLength={6} />
+                  <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
               <div className="form-group">
                 <label>{t('firstTimeDonor')}</label>
