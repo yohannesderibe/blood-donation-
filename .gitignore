@@ -10,6 +10,7 @@ backend/obj/
 .env.local
 .env.production
 *.user
+backend/appsettings.Development.json
 
 # IDE
 .vscode/
