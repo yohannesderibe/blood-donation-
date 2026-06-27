@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+frontend/dist/
+
+# Build outputs
+backend/bin/
+backend/obj/
+
+# Environment & secrets
+.env.local
+.env.production
+*.user
+
+# IDE
+.vscode/
+.idea/
+.qodo/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
