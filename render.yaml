@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: st-amanuel-blood-donation-api
+    runtime: docker
+    # Points to the backend subfolder which contains the Dockerfile
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # Set these in the Render dashboard (do NOT hardcode production secrets here)
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Key
+        sync: false
+      - key: Jwt__Issuer
+        value: StAmanuelBloodDonation
+      - key: Jwt__Audience
+        value: StAmanuelBloodDonationApp
+      - key: Cors__AllowedOrigins__0
+        sync: false
+      - key: AfroMessaging__ApiKey
+        sync: false
+      - key: AfroMessaging__IdentifierId
+        sync: false
+      - key: AfroMessaging__IdentifierName
+        value: WHALE
+      - key: AfroMessaging__BaseUrl
+        value: https://api.afromessage.com/api

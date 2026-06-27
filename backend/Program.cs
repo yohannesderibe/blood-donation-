@@ -48,6 +48,10 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(corsOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 });
 
+// Bind to Render's dynamic PORT environment variable (falls back to 5000 locally)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
