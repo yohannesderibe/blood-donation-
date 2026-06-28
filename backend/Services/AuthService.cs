@@ -32,8 +32,14 @@ public class AuthService(AppDbContext db, IConfiguration config) : IAuthService
 
     public string GenerateToken(Admin admin)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            config["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not configured")));
+        var jwtKey = config["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not configured");
+        byte[] keyBytes;
+        using (var sha256 = System.Security.Cryptography.SHA256.Create())
+        {
+            keyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(jwtKey));
+        }
+
+        var key = new SymmetricSecurityKey(keyBytes);
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expires = DateTime.UtcNow.AddHours(8);
 
