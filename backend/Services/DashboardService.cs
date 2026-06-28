@@ -24,11 +24,11 @@ public class DashboardService(AppDbContext db) : IDashboardService
 
     public async Task<IEnumerable<BloodTypeDistribution>> GetBloodTypeDistributionAsync()
     {
-        return await db.Donors
-            .GroupBy(d => d.BloodType)
+        var bloodTypes = await db.Donors.Select(d => d.BloodType).ToListAsync();
+        return bloodTypes
+            .GroupBy(b => b ?? "Unknown")
             .Select(g => new BloodTypeDistribution(g.Key, g.Count()))
-            .OrderByDescending(x => x.Count)
-            .ToListAsync();
+            .OrderByDescending(x => x.Count);
     }
 
     public async Task<IEnumerable<RecentDonorDto>> GetRecentDonorsAsync(int count)

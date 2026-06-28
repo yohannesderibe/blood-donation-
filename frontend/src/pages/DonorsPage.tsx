@@ -133,84 +133,89 @@ export default function DonorsPage() {
       {success && <div className="alert alert-success">{success}</div>}
 
       {showForm && (
-        <div className="card">
-          <h3 className="card-title">{t('addDonor')}</h3>
-          <form onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>{t('fullName')} *<span className="amharic">{t('fullName')}</span></label>
-                <input value={form.fullName} onChange={(e) => updateForm('fullName', e.target.value)} required />
-              </div>
-              <div className="form-group">
-                <label>{t('christianName')} *<span className="amharic">{t('christianName')}</span></label>
-                <input value={form.christianName} onChange={(e) => updateForm('christianName', e.target.value)} required />
-              </div>
-              <div className="form-group">
-                <label>{t('phone')} *<span className="amharic">{t('phone')}</span></label>
-                <input value={form.phone} onChange={(e) => updateForm('phone', e.target.value)} required />
-              </div>
-              <div className="form-group">
-                <label>{t('email')}</label>
-                <input type="email" value={form.email} onChange={(e) => updateForm('email', e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>{t('bloodType')} *</label>
-                <select value={form.bloodType} onChange={(e) => updateForm('bloodType', e.target.value)} required>
-                  {BLOOD_TYPES.map((bt) => <option key={bt} value={bt}>{bt === 'Unknown' ? t('unknown') : bt}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>{t('gender')}</label>
-                <select value={form.gender} onChange={(e) => updateForm('gender', e.target.value)}>
-                  <option value="Male">{t('male')}</option>
-                  <option value="Female">{t('female')}</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>{t('sundaySchool')}</label>
-                <select value={form.isSundaySchoolMember ? 'yes' : 'no'} onChange={(e) => updateForm('isSundaySchoolMember', e.target.value === 'yes')}>
-                  <option value="yes">{t('yes')}</option>
-                  <option value="no">{t('no')}</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>{t('donorPassword')} *</label>
-                <div className="password-input-container">
-                  <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => updateForm('password', e.target.value)} required minLength={6} />
-                  <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
+        <div className="modal-overlay" onClick={() => setShowForm(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{t('addDonor')}</h3>
+              <button className="btn btn-secondary btn-sm" onClick={() => setShowForm(false)}>{t('close')}</button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>{t('fullName')} *<span className="amharic">{t('fullName')}</span></label>
+                  <input value={form.fullName} onChange={(e) => updateForm('fullName', e.target.value)} required />
+                </div>
+                <div className="form-group">
+                  <label>{t('christianName')} *<span className="amharic">{t('christianName')}</span></label>
+                  <input value={form.christianName} onChange={(e) => updateForm('christianName', e.target.value)} required />
+                </div>
+                <div className="form-group">
+                  <label>{t('phone')} *<span className="amharic">{t('phone')}</span></label>
+                  <input value={form.phone} onChange={(e) => updateForm('phone', e.target.value)} required />
+                </div>
+                <div className="form-group">
+                  <label>{t('email')}</label>
+                  <input type="email" value={form.email} onChange={(e) => updateForm('email', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>{t('bloodType')} *</label>
+                  <select value={form.bloodType} onChange={(e) => updateForm('bloodType', e.target.value)} required>
+                    {BLOOD_TYPES.map((bt) => <option key={bt} value={bt}>{bt === 'Unknown' ? t('unknown') : bt}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>{t('gender')}</label>
+                  <select value={form.gender} onChange={(e) => updateForm('gender', e.target.value)}>
+                    <option value="Male">{t('male')}</option>
+                    <option value="Female">{t('female')}</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>{t('sundaySchool')}</label>
+                  <select value={form.isSundaySchoolMember ? 'yes' : 'no'} onChange={(e) => updateForm('isSundaySchoolMember', e.target.value === 'yes')}>
+                    <option value="yes">{t('yes')}</option>
+                    <option value="no">{t('no')}</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>{t('donorPassword')} *</label>
+                  <div className="password-input-container">
+                    <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => updateForm('password', e.target.value)} required minLength={6} />
+                    <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>{t('firstTimeDonor')}</label>
+                  <select value={form.isFirstTimeDonor ? 'yes' : 'no'} onChange={(e) => updateForm('isFirstTimeDonor', e.target.value === 'yes')}>
+                    <option value="yes">{t('yes')}</option>
+                    <option value="no">{t('no')}</option>
+                  </select>
+                </div>
+                {!form.isFirstTimeDonor && (
+                  <>
+                    <div className="form-group">
+                      <label>{t('lastDonationDate')}</label>
+                      <input type="date" value={form.lastDonationDate} onChange={(e) => updateForm('lastDonationDate', e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label>{t('previousDonationCount')}</label>
+                      <input type="number" min={0} value={form.previousDonationCount} onChange={(e) => updateForm('previousDonationCount', +e.target.value)} />
+                    </div>
+                  </>
+                )}
+                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                  <label>{t('howHeard')}</label>
+                  <input value={form.howHeardAboutUs} onChange={(e) => updateForm('howHeardAboutUs', e.target.value)} />
                 </div>
               </div>
-              <div className="form-group">
-                <label>{t('firstTimeDonor')}</label>
-                <select value={form.isFirstTimeDonor ? 'yes' : 'no'} onChange={(e) => updateForm('isFirstTimeDonor', e.target.value === 'yes')}>
-                  <option value="yes">{t('yes')}</option>
-                  <option value="no">{t('no')}</option>
-                </select>
+              <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
+                <button type="submit" className="btn btn-primary">{t('save')}</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>{t('cancel')}</button>
               </div>
-              {!form.isFirstTimeDonor && (
-                <>
-                  <div className="form-group">
-                    <label>{t('lastDonationDate')}</label>
-                    <input type="date" value={form.lastDonationDate} onChange={(e) => updateForm('lastDonationDate', e.target.value)} />
-                  </div>
-                  <div className="form-group">
-                    <label>{t('previousDonationCount')}</label>
-                    <input type="number" min={0} value={form.previousDonationCount} onChange={(e) => updateForm('previousDonationCount', +e.target.value)} />
-                  </div>
-                </>
-              )}
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label>{t('howHeard')}</label>
-                <input value={form.howHeardAboutUs} onChange={(e) => updateForm('howHeardAboutUs', e.target.value)} />
-              </div>
-            </div>
-            <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
-              <button type="submit" className="btn btn-primary">{t('save')}</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>{t('cancel')}</button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       )}
 
