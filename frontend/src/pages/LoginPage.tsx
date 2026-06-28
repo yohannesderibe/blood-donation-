@@ -22,8 +22,14 @@ export default function LoginPage() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify({ username: data.username, fullName: data.fullName, role: data.role }));
       navigate('/dashboard');
-    } catch {
-      setError(lang === 'en' ? 'Invalid username or password' : 'የተሳሳተ የተጠቃሚ ስም ወይም የይለፍ ቃል');
+    } catch (err: any) {
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.response?.data?.error) {
+        setError(`${err.response.data.error}: ${err.response.data.message || ''}`);
+      } else {
+        setError(lang === 'en' ? 'Invalid username or password' : 'የተሳሳተ የተጠቃሚ ስም ወይም የይለፍ ቃል');
+      }
     } finally {
       setLoading(false);
     }

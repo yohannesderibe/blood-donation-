@@ -13,11 +13,23 @@ public class AuthController(IAuthService authService) : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var result = await authService.LoginAsync(request);
-        if (result == null)
-            return Unauthorized(new ApiError("Invalid username or password", "የተሳሳተ የተጠቃሚ ስም ወይም የይለፍ ቃል"));
+        try
+        {
+            var result = await authService.LoginAsync(request);
+            if (result == null)
+                return Unauthorized(new ApiError("Invalid username or password", "የተሳሳተ የተጠቃሚ ስም ወይም የይለፍ ቃል"));
 
-        return Ok(result);
+            return Ok(result);
+        }
+        catch (System.Exception ex)
+        {
+            return StatusCode(500, new { 
+                error = "Internal Server Error during login", 
+                message = ex.Message, 
+                stackTrace = ex.StackTrace,
+                innerException = ex.InnerException?.Message 
+            });
+        }
     }
 }
 
