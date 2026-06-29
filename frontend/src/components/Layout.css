@@ -104,6 +104,11 @@ body {
   font-weight: 600;
 }
 
+.mobile-topbar {
+  display: flex;
+  flex-direction: column;
+}
+
 .sidebar-footer {
   padding: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -527,6 +532,7 @@ tr:hover td {
     width: 100%;
     height: auto;
     position: relative;
+    flex-direction: column;
   }
 
   .layout {
@@ -538,10 +544,94 @@ tr:hover td {
     padding: 16px;
   }
 
+
+  /* Make topbar a flex row on mobile: brand left, buttons right */
+  .mobile-topbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding: 0 8px 0 0;
+  }
+
+  /* Mobile top bar: brand on left */
+  .sidebar-brand {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .sidebar-brand > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sidebar-brand h1 {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar-brand p {
+    display: none;
+  }
+
+  /* Mobile action buttons: language + logout next to brand */
+  .sidebar-footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    border-top: none;
+    flex-shrink: 0;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  .lang-toggle {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    margin-bottom: 0;
+    border-radius: 8px;
+    white-space: nowrap;
+    box-shadow: none;
+  }
+
+  .logout-btn {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    min-height: unset;
+    white-space: nowrap;
+    border-radius: 8px;
+  }
+
+  /* Nav becomes horizontal icon-only row */
   .sidebar-nav {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     overflow-x: auto;
+    padding: 8px 12px;
+    gap: 2px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    scrollbar-width: none;
+  }
+
+  .sidebar-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    padding: 10px 14px;
+    min-height: 42px;
+    flex-shrink: 0;
+    justify-content: center;
   }
 
   .nav-link span {

@@ -16,12 +16,20 @@ interface DonorForm {
   lastDonationDate: string;
   previousDonationCount: number;
   howHeardAboutUs: string;
+  howHeardOther: string;
 }
+
+const HOW_HEARD_OPTIONS = [
+  { value: 'TikTok', label: 'TikTok' },
+  { value: 'SMS', label: 'SMS' },
+  { value: 'Poster', label: 'Poster' },
+  { value: 'Other', label: 'Other' },
+];
 
 const emptyForm: DonorForm = {
   fullName: '', christianName: '', phone: '', email: '', bloodType: 'Unknown',
   gender: 'Male', isSundaySchoolMember: false, password: '', isFirstTimeDonor: true,
-  lastDonationDate: '', previousDonationCount: 0, howHeardAboutUs: '',
+  lastDonationDate: '', previousDonationCount: 0, howHeardAboutUs: '', howHeardOther: '',
 };
 
 export default function DonorsPage() {
@@ -70,12 +78,15 @@ export default function DonorsPage() {
     e.preventDefault();
     setError('');
     try {
+      const howHeard = form.howHeardAboutUs === 'Other'
+        ? form.howHeardOther || 'Other'
+        : form.howHeardAboutUs || null;
       await api.post('/donors', {
         ...form,
         email: form.email || null,
         lastDonationDate: form.isFirstTimeDonor ? null : form.lastDonationDate || null,
         previousDonationCount: form.isFirstTimeDonor ? 0 : form.previousDonationCount,
-        howHeardAboutUs: form.howHeardAboutUs || null,
+        howHeardAboutUs: howHeard,
       });
       setSuccess(t('success'));
       setShowForm(false);
@@ -207,7 +218,26 @@ export default function DonorsPage() {
                 )}
                 <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                   <label>{t('howHeard')}</label>
-                  <input value={form.howHeardAboutUs} onChange={(e) => updateForm('howHeardAboutUs', e.target.value)} />
+                  <select
+                    value={form.howHeardAboutUs}
+                    onChange={(e) => {
+                      updateForm('howHeardAboutUs', e.target.value);
+                      if (e.target.value !== 'Other') updateForm('howHeardOther', '');
+                    }}
+                  >
+                    <option value="">-- Select --</option>
+                    {HOW_HEARD_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  {form.howHeardAboutUs === 'Other' && (
+                    <input
+                      style={{ marginTop: 8 }}
+                      placeholder="Please describe..."
+                      value={form.howHeardOther}
+                      onChange={(e) => updateForm('howHeardOther', e.target.value)}
+                    />
+                  )}
                 </div>
               </div>
               <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
