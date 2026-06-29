@@ -528,13 +528,6 @@ tr:hover td {
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    flex-direction: column;
-  }
-
   .layout {
     flex-direction: column;
   }
@@ -544,29 +537,24 @@ tr:hover td {
     padding: 16px;
   }
 
-
-  /* Make topbar a flex row on mobile: brand left, buttons right */
-  .mobile-topbar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    padding: 0 8px 0 0;
+  /* Sidebar becomes a CSS grid so brand + footer share one row,
+     and nav spans the full second row — without changing HTML order */
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: grid;
+    grid-template-areas:
+      "brand footer"
+      "nav   nav";
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
   }
 
-  /* Mobile top bar: brand on left */
   .sidebar-brand {
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    flex-wrap: nowrap;
-  }
-
-  .sidebar-brand > div {
-    flex: 1;
-    min-width: 0;
+    grid-area: brand;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   }
 
   .sidebar-brand h1 {
@@ -580,15 +568,16 @@ tr:hover td {
     display: none;
   }
 
-  /* Mobile action buttons: language + logout next to brand */
+  /* Footer moves to top-right on mobile: lang + logout side by side */
   .sidebar-footer {
-    display: flex;
+    grid-area: footer;
     flex-direction: row;
     align-items: center;
     gap: 6px;
-    padding: 0;
+    padding: 12px 10px;
     border-top: none;
-    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .user-info {
@@ -596,7 +585,7 @@ tr:hover td {
   }
 
   .lang-toggle {
-    padding: 8px 10px;
+    padding: 7px 10px;
     font-size: 0.75rem;
     margin-bottom: 0;
     border-radius: 8px;
@@ -605,32 +594,29 @@ tr:hover td {
   }
 
   .logout-btn {
-    padding: 8px 10px;
+    padding: 7px 10px;
     font-size: 0.75rem;
     min-height: unset;
     white-space: nowrap;
     border-radius: 8px;
   }
 
-  /* Nav becomes horizontal icon-only row */
+  /* Nav spans full width — icons spread evenly */
   .sidebar-nav {
+    grid-area: nav;
     flex-direction: row;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 8px 12px;
-    gap: 2px;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    scrollbar-width: none;
-  }
-
-  .sidebar-nav::-webkit-scrollbar {
-    display: none;
+    overflow-x: hidden;
+    padding: 6px 8px;
+    gap: 0;
+    justify-content: space-evenly;
+    border-top: none;
   }
 
   .nav-link {
-    padding: 10px 14px;
-    min-height: 42px;
-    flex-shrink: 0;
+    padding: 10px 8px;
+    min-height: 44px;
+    flex: 1;
     justify-content: center;
   }
 
@@ -642,6 +628,7 @@ tr:hover td {
     grid-template-columns: 1fr;
   }
 }
+
 
 /* Password visibility toggle styling */
 .password-input-container {
