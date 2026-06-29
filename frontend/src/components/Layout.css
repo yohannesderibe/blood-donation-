@@ -104,10 +104,6 @@ body {
   font-weight: 600;
 }
 
-.mobile-topbar {
-  display: flex;
-  flex-direction: column;
-}
 
 .sidebar-footer {
   padding: 16px;
