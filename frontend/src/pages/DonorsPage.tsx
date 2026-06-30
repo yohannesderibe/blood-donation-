@@ -15,6 +15,8 @@ interface DonorForm {
   previousDonationCount: number;
   howHeardAboutUs: string;
   howHeardOther: string;
+  email?: string;
+  password?: string;
 }
 
 const HOW_HEARD_OPTIONS = [
@@ -28,6 +30,7 @@ const emptyForm: DonorForm = {
   fullName: '', christianName: '', phone: '', bloodType: 'Unknown',
   gender: 'Male', isSundaySchoolMember: false, isFirstTimeDonor: true,
   lastDonationDate: '', previousDonationCount: 0, howHeardAboutUs: '', howHeardOther: '',
+  email: '', password: ''
 };
 
 export default function DonorsPage() {
@@ -80,6 +83,8 @@ export default function DonorsPage() {
         : form.howHeardAboutUs || null;
       await api.post('/donors', {
         ...form,
+        email: form.email || undefined,
+        password: form.password || undefined,
         lastDonationDate: form.isFirstTimeDonor ? null : form.lastDonationDate || null,
         previousDonationCount: form.isFirstTimeDonor ? 0 : form.previousDonationCount,
         howHeardAboutUs: howHeard,
@@ -159,6 +164,16 @@ export default function DonorsPage() {
                 <div className="form-group">
                   <label>{t('phone')} *<span className="amharic">{t('phone')}</span></label>
                   <input value={form.phone} onChange={(e) => updateForm('phone', e.target.value)} required />
+                </div>
+                
+                <div className="form-group" style={{ display: 'none' }}>
+                  <label>{t('email')}</label>
+                  <input type="email" value={form.email || ''} onChange={(e) => updateForm('email', e.target.value)} autoComplete="new-password" />
+                </div>
+
+                <div className="form-group" style={{ display: 'none' }}>
+                  <label>{t('donorPassword')}</label>
+                  <input type="password" value={form.password || ''} onChange={(e) => updateForm('password', e.target.value)} autoComplete="new-password" />
                 </div>
 
                 <div className="form-group">
