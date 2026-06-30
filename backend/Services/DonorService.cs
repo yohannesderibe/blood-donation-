@@ -86,7 +86,6 @@ public class DonorService(AppDbContext db, IAuditService audit) : IDonorService
             BloodType = request.BloodType,
             Gender = request.Gender,
             IsSundaySchoolMember = request.IsSundaySchoolMember,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             IsFirstTimeDonor = request.IsFirstTimeDonor,
             LastDonationDate = request.IsFirstTimeDonor ? null : request.LastDonationDate,
             PreviousDonationCount = request.IsFirstTimeDonor ? 0 : (request.PreviousDonationCount ?? 0),

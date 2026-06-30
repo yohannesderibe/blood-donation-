@@ -7,11 +7,9 @@ interface DonorForm {
   fullName: string;
   christianName: string;
   phone: string;
-  email: string;
   bloodType: string;
   gender: string;
   isSundaySchoolMember: boolean;
-  password: string;
   isFirstTimeDonor: boolean;
   lastDonationDate: string;
   previousDonationCount: number;
@@ -27,8 +25,8 @@ const HOW_HEARD_OPTIONS = [
 ];
 
 const emptyForm: DonorForm = {
-  fullName: '', christianName: '', phone: '', email: '', bloodType: 'Unknown',
-  gender: 'Male', isSundaySchoolMember: false, password: '', isFirstTimeDonor: true,
+  fullName: '', christianName: '', phone: '', bloodType: 'Unknown',
+  gender: 'Male', isSundaySchoolMember: false, isFirstTimeDonor: true,
   lastDonationDate: '', previousDonationCount: 0, howHeardAboutUs: '', howHeardOther: '',
 };
 
@@ -49,7 +47,6 @@ export default function DonorsPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const fetchDonors = useCallback(async () => {
     setLoading(true);
@@ -83,7 +80,6 @@ export default function DonorsPage() {
         : form.howHeardAboutUs || null;
       await api.post('/donors', {
         ...form,
-        email: form.email || null,
         lastDonationDate: form.isFirstTimeDonor ? null : form.lastDonationDate || null,
         previousDonationCount: form.isFirstTimeDonor ? 0 : form.previousDonationCount,
         howHeardAboutUs: howHeard,
@@ -164,10 +160,7 @@ export default function DonorsPage() {
                   <label>{t('phone')} *<span className="amharic">{t('phone')}</span></label>
                   <input value={form.phone} onChange={(e) => updateForm('phone', e.target.value)} required />
                 </div>
-                <div className="form-group">
-                  <label>{t('email')}</label>
-                  <input type="email" value={form.email} onChange={(e) => updateForm('email', e.target.value)} />
-                </div>
+
                 <div className="form-group">
                   <label>{t('bloodType')} *</label>
                   <select value={form.bloodType} onChange={(e) => updateForm('bloodType', e.target.value)} required>
@@ -188,15 +181,7 @@ export default function DonorsPage() {
                     <option value="no">{t('no')}</option>
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>{t('donorPassword')} *</label>
-                  <div className="password-input-container">
-                    <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => updateForm('password', e.target.value)} required minLength={6} />
-                    <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  </div>
-                </div>
+
                 <div className="form-group">
                   <label>{t('firstTimeDonor')}</label>
                   <select value={form.isFirstTimeDonor ? 'yes' : 'no'} onChange={(e) => updateForm('isFirstTimeDonor', e.target.value === 'yes')}>
@@ -333,7 +318,7 @@ export default function DonorsPage() {
               <div><strong>{t('fullName')}:</strong> {viewDonor.fullName}</div>
               <div><strong>{t('christianName')}:</strong> {viewDonor.christianName}</div>
               <div><strong>{t('phone')}:</strong> {viewDonor.phone}</div>
-              <div><strong>{t('email')}:</strong> {viewDonor.email || '-'}</div>
+
               <div><strong>{t('bloodType')}:</strong> {viewDonor.bloodType}</div>
               <div><strong>{t('gender')}:</strong> {viewDonor.gender || '-'}</div>
               <div><strong>{t('sundaySchool')}:</strong> {viewDonor.isSundaySchoolMember ? t('yes') : t('no')}</div>

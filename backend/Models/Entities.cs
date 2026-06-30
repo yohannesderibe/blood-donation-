@@ -23,7 +23,7 @@ public class Donor
     public string BloodType { get; set; } = "Unknown";
     public string? Gender { get; set; }
     public bool IsSundaySchoolMember { get; set; }
-    public string PasswordHash { get; set; } = string.Empty;
+    public string? PasswordHash { get; set; }
     public bool IsFirstTimeDonor { get; set; } = true;
     public DateOnly? LastDonationDate { get; set; }
     public int PreviousDonationCount { get; set; }

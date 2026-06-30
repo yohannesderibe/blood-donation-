@@ -16,7 +16,6 @@ public record CreateDonorRequest(
     string BloodType,
     string? Gender,
     bool IsSundaySchoolMember,
-    string Password,
     bool IsFirstTimeDonor,
     DateOnly? LastDonationDate,
     int? PreviousDonationCount,
