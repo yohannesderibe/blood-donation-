@@ -49,7 +49,7 @@ public class ReportService(AppDbContext db) : IReportService
         if (ext == "csv")
         {
             using var ms = new MemoryStream();
-            using var writer = new StreamWriter(ms, Encoding.UTF8);
+            using var writer = new StreamWriter(ms, new UTF8Encoding(true));
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(donors.Select(d => new
             {
@@ -75,7 +75,8 @@ public class ReportService(AppDbContext db) : IReportService
             {
                 page.Size(PageSizes.A4);
                 page.Margin(30);
-                page.Header().Text("St. Amanuel Church - Donor Directory").FontSize(18).Bold();
+                page.DefaultTextStyle(x => x.FontFamily("Nyala").Fallback(f => f.FontFamily("Arial")));
+                page.Header().PaddingBottom(10).Text("St. Amanuel Church - Donor Directory").FontColor("#8b0000").FontSize(20).Bold();
                 page.Content().Table(table =>
                 {
                     table.ColumnsDefinition(c =>
@@ -88,19 +89,19 @@ public class ReportService(AppDbContext db) : IReportService
                     });
                     table.Header(h =>
                     {
-                        h.Cell().Text("Name").Bold();
-                        h.Cell().Text("Christian Name").Bold();
-                        h.Cell().Text("Phone").Bold();
-                        h.Cell().Text("Blood Type").Bold();
-                        h.Cell().Text("Sunday School").Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Name").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Christian Name").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Phone").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Blood Type").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Sunday School").FontColor(Colors.White).Bold();
                     });
                     foreach (var d in donors)
                     {
-                        table.Cell().Text(d.FullName);
-                        table.Cell().Text(d.ChristianName);
-                        table.Cell().Text(d.Phone);
-                        table.Cell().Text(d.BloodType);
-                        table.Cell().Text(d.IsSundaySchoolMember ? "Yes" : "No");
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.FullName ?? string.Empty);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.ChristianName ?? string.Empty);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.Phone ?? string.Empty);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.BloodType ?? string.Empty);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.IsSundaySchoolMember ? "Yes" : "No");
                     }
                 });
             });
@@ -126,7 +127,7 @@ public class ReportService(AppDbContext db) : IReportService
         if (ext == "csv")
         {
             using var ms = new MemoryStream();
-            using var writer = new StreamWriter(ms, Encoding.UTF8);
+            using var writer = new StreamWriter(ms, new UTF8Encoding(true));
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(donations.Select(d => new
             {
@@ -147,23 +148,24 @@ public class ReportService(AppDbContext db) : IReportService
             {
                 page.Size(PageSizes.A4.Landscape());
                 page.Margin(30);
-                page.Header().Text("St. Amanuel Church - Donation History").FontSize(18).Bold();
+                page.DefaultTextStyle(x => x.FontFamily("Nyala").Fallback(f => f.FontFamily("Arial")));
+                page.Header().PaddingBottom(10).Text("St. Amanuel Church - Donation History").FontColor("#8b0000").FontSize(20).Bold();
                 page.Content().Table(table =>
                 {
                     table.ColumnsDefinition(c => { c.RelativeColumn(2); c.RelativeColumn(1); c.RelativeColumn(2); c.RelativeColumn(2); });
                     table.Header(h =>
                     {
-                        h.Cell().Text("Donor").Bold();
-                        h.Cell().Text("Date").Bold();
-                        h.Cell().Text("Hospital").Bold();
-                        h.Cell().Text("Notes").Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Donor").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Date").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Hospital").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Notes").FontColor(Colors.White).Bold();
                     });
                     foreach (var d in donations)
                     {
-                        table.Cell().Text(d.Donor.FullName);
-                        table.Cell().Text(d.DonationDate.ToString("MM/dd/yyyy"));
-                        table.Cell().Text(d.HospitalPartner?.Name ?? "-");
-                        table.Cell().Text(d.Notes ?? "-");
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.Donor.FullName ?? string.Empty);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.DonationDate.ToString("MM/dd/yyyy"));
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.HospitalPartner?.Name ?? "-");
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(d.Notes ?? "-");
                     }
                 });
             });
@@ -188,7 +190,7 @@ public class ReportService(AppDbContext db) : IReportService
         if (ext == "csv")
         {
             using var ms = new MemoryStream();
-            using var writer = new StreamWriter(ms, Encoding.UTF8);
+            using var writer = new StreamWriter(ms, new UTF8Encoding(true));
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(logs.Select(s => new
             {
@@ -210,23 +212,24 @@ public class ReportService(AppDbContext db) : IReportService
             {
                 page.Size(PageSizes.A4);
                 page.Margin(30);
-                page.Header().Text("St. Amanuel Church - SMS Campaigns").FontSize(18).Bold();
+                page.DefaultTextStyle(x => x.FontFamily("Nyala").Fallback(f => f.FontFamily("Arial")));
+                page.Header().PaddingBottom(10).Text("St. Amanuel Church - SMS Campaigns").FontColor("#8b0000").FontSize(20).Bold();
                 page.Content().Table(table =>
                 {
                     table.ColumnsDefinition(c => { c.RelativeColumn(1); c.RelativeColumn(1); c.RelativeColumn(3); c.RelativeColumn(1); });
                     table.Header(h =>
                     {
-                        h.Cell().Text("Type").Bold();
-                        h.Cell().Text("Count").Bold();
-                        h.Cell().Text("Message").Bold();
-                        h.Cell().Text("Status").Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Type").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Count").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Message").FontColor(Colors.White).Bold();
+                        h.Cell().Background("#8b0000").Padding(5).Text("Status").FontColor(Colors.White).Bold();
                     });
                     foreach (var s in logs)
                     {
-                        table.Cell().Text(s.RecipientType);
-                        table.Cell().Text(s.RecipientCount.ToString());
-                        table.Cell().Text(s.MessageContent.Length > 80 ? s.MessageContent[..80] + "..." : s.MessageContent);
-                        table.Cell().Text(s.Status);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(s.RecipientType ?? string.Empty);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(s.RecipientCount.ToString());
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(s.MessageContent.Length > 80 ? s.MessageContent[..80] + "..." : s.MessageContent);
+                        table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(s.Status ?? string.Empty);
                     }
                 });
             });

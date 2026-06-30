@@ -117,7 +117,7 @@ export default function ReportsPage() {
                 {history.length === 0 ? (
                   <tr><td colSpan={4}>{t('noData')}</td></tr>
                 ) : (
-                  history.map((r) => (
+                  history.slice(0, 5).map((r) => (
                     <tr key={r.id}>
                       <td>{r.reportType}</td>
                       <td>{r.fileFormat}</td>
