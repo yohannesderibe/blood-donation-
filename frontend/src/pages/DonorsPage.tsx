@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Eye, EyeOff, Trash2, CheckCircle, Plus, X } from 'lucide-react';
+import { Eye, Trash2, CheckCircle, Plus, X } from 'lucide-react';
 import api, { BLOOD_TYPES, type DonorListItem, type DonorDetail, type PagedResult } from '../api/client';
 import { useLanguage } from '../i18n/LanguageContext';
 
