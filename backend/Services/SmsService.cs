@@ -13,8 +13,6 @@ public interface ISmsService
     Task<SmsLogDto> SendSmsAsync(SendSmsRequest request, Guid adminId, string? ip);
     Task<IEnumerable<SmsLogDto>> GetHistoryAsync(int page = 1, int pageSize = 20);
     Task RetryFailedAsync(Guid smsLogId, Guid adminId);
-    Task<bool> DeleteAsync(Guid smsLogId);
-    Task<int> DeleteAllAsync();
 }
 
 public class SmsService(AppDbContext db, IHttpClientFactory httpFactory, IConfiguration config, IAuditService audit) : ISmsService
@@ -109,31 +107,6 @@ public class SmsService(AppDbContext db, IHttpClientFactory httpFactory, IConfig
         smsLog.DeliveryStatus = success ? "Delivered" : "Failed";
         smsLog.SentAt = DateTime.UtcNow;
         await db.SaveChangesAsync();
-    }
-
-    public async Task<bool> DeleteAsync(Guid smsLogId)
-    {
-        var smsLog = await db.SmsLogs
-            .Include(s => s.Recipients)
-            .FirstOrDefaultAsync(s => s.Id == smsLogId);
-
-        if (smsLog == null) return false;
-
-        db.SmsRecipients.RemoveRange(smsLog.Recipients);
-        db.SmsLogs.Remove(smsLog);
-        await db.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<int> DeleteAllAsync()
-    {
-        var allRecipients = await db.SmsRecipients.ToListAsync();
-        db.SmsRecipients.RemoveRange(allRecipients);
-
-        var allLogs = await db.SmsLogs.ToListAsync();
-        db.SmsLogs.RemoveRange(allLogs);
-        await db.SaveChangesAsync();
-        return allLogs.Count;
     }
 
     private async Task<List<(string Phone, Guid? DonorId)>> ResolveRecipientsAsync(SendSmsRequest request)

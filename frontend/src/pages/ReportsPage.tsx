@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, Trash2 } from 'lucide-react';
+import { Download } from 'lucide-react';
 import api, { type ReportMetadata } from '../api/client';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -18,29 +18,12 @@ export default function ReportsPage() {
   const [history, setHistory] = useState<ReportMetadata[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(''), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => setSuccess(''), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
-
-  const fetchHistory = () => {
     api.get<ReportMetadata[]>('/reports/history')
       .then(({ data }) => setHistory(data))
       .catch(console.error);
-  };
-
-  useEffect(() => { fetchHistory(); }, []);
+  }, []);
 
   const handleDownload = async () => {
     setLoading(true);
@@ -69,33 +52,12 @@ export default function ReportsPage() {
       link.remove();
       window.URL.revokeObjectURL(url);
 
-      fetchHistory();
+      const histRes = await api.get<ReportMetadata[]>('/reports/history');
+      setHistory(histRes.data);
     } catch {
       setError(t('error'));
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDeleteSms = async (id: string) => {
-    if (!confirm(t('confirmDeleteSms'))) return;
-    try {
-      await api.delete(`/sms/${id}`);
-      setSuccess(t('success'));
-      fetchHistory();
-    } catch {
-      setError(t('error'));
-    }
-  };
-
-  const handleDeleteAllSms = async () => {
-    if (!confirm(t('confirmDeleteAll'))) return;
-    try {
-      await api.delete('/sms/all');
-      setSuccess(t('success'));
-      fetchHistory();
-    } catch {
-      setError(t('error'));
     }
   };
 
@@ -104,7 +66,6 @@ export default function ReportsPage() {
       <div className="page-header"><h2>{t('reports')}</h2></div>
 
       {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
 
       <div className="grid-2">
         <div className="card">
@@ -141,14 +102,7 @@ export default function ReportsPage() {
         </div>
 
         <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <h3 className="card-title" style={{ margin: 0 }}>{t('reports')} - {t('smsHistory')}</h3>
-            {history.length > 0 && (
-              <button className="btn btn-secondary btn-sm" onClick={handleDeleteAllSms} style={{ color: '#dc3545', borderColor: '#dc3545' }}>
-                <Trash2 size={14} /> {t('deleteAll')}
-              </button>
-            )}
-          </div>
+          <h3 className="card-title">{t('reports')} - {t('smsHistory')}</h3>
           <div className="table-wrapper">
             <table>
               <thead>
@@ -157,12 +111,11 @@ export default function ReportsPage() {
                   <th>{t('format')}</th>
                   <th>{t('sentAt')}</th>
                   <th>{t('recipientCount')}</th>
-                  <th>{t('actions')}</th>
                 </tr>
               </thead>
               <tbody>
                 {history.length === 0 ? (
-                  <tr><td colSpan={5}>{t('noData')}</td></tr>
+                  <tr><td colSpan={4}>{t('noData')}</td></tr>
                 ) : (
                   history.slice(0, 5).map((r) => (
                     <tr key={r.id}>
@@ -170,11 +123,6 @@ export default function ReportsPage() {
                       <td>{r.fileFormat}</td>
                       <td>{new Date(r.generatedAt).toLocaleString()}</td>
                       <td>{r.recordCount}</td>
-                      <td>
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleDeleteSms(r.id)} style={{ color: '#dc3545', borderColor: '#dc3545' }}>
-                          <Trash2 size={14} /> {t('delete')}
-                        </button>
-                      </td>
                     </tr>
                   ))
                 )}

@@ -156,20 +156,6 @@ public class SmsController(ISmsService smsService) : ControllerBase
             return BadRequest(new ApiError(ex.Message, "ከፍተኛ የመሞከር ሙከራ ተደርጓል"));
         }
     }
-
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        var deleted = await smsService.DeleteAsync(id);
-        return deleted ? NoContent() : NotFound(new ApiError("SMS log not found", "የSMS ምዝገባ አልተገኘም"));
-    }
-
-    [HttpDelete("all")]
-    public async Task<IActionResult> DeleteAll()
-    {
-        var count = await smsService.DeleteAllAsync();
-        return Ok(new { message = $"Deleted {count} SMS log(s)", count });
-    }
 }
 
 [ApiController]
