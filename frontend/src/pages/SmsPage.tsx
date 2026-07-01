@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Send, RefreshCw } from 'lucide-react';
+import { Send, RefreshCw, Trash2 } from 'lucide-react';
 import api, { type SmsBalance, type SmsLog, type DonorListItem, type PagedResult } from '../api/client';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -99,6 +99,28 @@ export default function SmsPage() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm(t('confirmDeleteSms'))) return;
+    try {
+      await api.delete(`/sms/${id}`);
+      setSuccess(t('success'));
+      fetchData();
+    } catch {
+      setError(t('error'));
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (!confirm(t('confirmDeleteAll'))) return;
+    try {
+      await api.delete('/sms/all');
+      setSuccess(t('success'));
+      fetchData();
+    } catch {
+      setError(t('error'));
+    }
+  };
+
   const toggleDonor = (id: string) => {
     setSelectedIds((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
   };
@@ -162,7 +184,14 @@ export default function SmsPage() {
         )}
 
         <div className="card" style={recipientType === 'Selected' ? { gridColumn: '1 / -1' } : {}}>
-          <h3 className="card-title">{t('smsHistory')}</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <h3 className="card-title" style={{ margin: 0 }}>{t('smsHistory')}</h3>
+            {history.length > 0 && (
+              <button className="btn btn-secondary btn-sm" onClick={handleDeleteAll} style={{ color: '#dc3545', borderColor: '#dc3545' }}>
+                <Trash2 size={14} /> {t('deleteAll')}
+              </button>
+            )}
+          </div>
           <div className="table-wrapper">
             <table>
               <thead>
@@ -188,12 +217,15 @@ export default function SmsPage() {
                           {log.status}
                         </span>
                       </td>
-                      <td>
+                      <td style={{ display: 'flex', gap: 6 }}>
                         {log.status === 'Failed' && (
                           <button className="btn btn-secondary btn-sm" onClick={() => handleRetry(log.id)}>
                             <RefreshCw size={14} /> {t('retry')}
                           </button>
                         )}
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleDelete(log.id)} style={{ color: '#dc3545', borderColor: '#dc3545' }}>
+                          <Trash2 size={14} /> {t('delete')}
+                        </button>
                       </td>
                     </tr>
                   ))
